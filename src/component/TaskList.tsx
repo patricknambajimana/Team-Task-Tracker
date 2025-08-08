@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useTasks } from "../hook/useTask";
 import type { ITask } from "../types/Task";
+import type {TaskStatus } from "../types/Task"
 
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useTasks();
 
   // Filter states
-  const [statusFilter, setStatusFilter] = useState<"All" | "Completed" | "Incomplete">("All");
+  const [statusFilter, setStatusFilter] = useState<TaskStatus>("All");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [assignedUserFilter, setAssignedUserFilter] = useState("");

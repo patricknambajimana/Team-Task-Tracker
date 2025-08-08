@@ -4,21 +4,15 @@ import type { ITask } from "../types/Task";
 
 const TaskForm: React.FC = () => {
   const [tasks, setTasks] = useTasks();
-
-  const [formData, setFormData] = useState({
+  const [formData, setformData] = useState<ITask>({
     name: "",
     assignedUser: "",
     priority: "Low",
-    category: "Frontend",
+    category: "",
     dueDate: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const onSubmitHandler = (event: React.FormEvent) => {
+  const formHandler = (event: React.FormEvent) => {
     event.preventDefault();
 
     const newTask: ITask = {
@@ -27,15 +21,13 @@ const TaskForm: React.FC = () => {
       assignedUser: formData.assignedUser,
       priority: formData.priority,
       category: formData.category,
-      dueDate: new Date(formData.dueDate).toISOString(),
+      dueDate: new Date().toISOString(),
       assignedOn: new Date().toISOString(),
       completed: false,
     };
-
     setTasks([...tasks, newTask]);
 
-    // Reset form
-    setFormData({
+    setformData({
       name: "",
       assignedUser: "",
       priority: "Low",
@@ -44,6 +36,61 @@ const TaskForm: React.FC = () => {
     });
   };
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setformData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const validateForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const InputText = e.target.value.trim();
+    if(!InputText){
+      return 'name is required'
+    }
+    return ''
+  };
+
+  // const [tasks, setTasks] = useTasks();
+  // const [formData, setFormData] = useState<ITask>({
+
+  //   name: "",
+  //   assignedUser: "",
+  //   priority: "Low",
+  //   category: "Frontend",
+  //   dueDate: "",
+  // });
+
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({ ...prev, [name]: value }));
+  // };
+
+  // const onSubmitHandler = (event: React.FormEvent) => {
+  //   event.preventDefault();
+
+  //   const newTask: ITask = {
+  //     id: Date.now(),
+  //     name: formData.name,
+  //     assignedUser: formData.assignedUser,
+  //     priority: formData.priority,
+  //     category: formData.category,
+  //     dueDate: new Date().toISOString(),
+  //     assignedOn: new Date().toISOString(),
+  //     completed: false,
+  //   };
+
+  //   setTasks([...tasks, newTask]);
+
+  //   setFormData({
+  //     name: "",
+  //     assignedUser: "",
+  //     priority: "Low",
+  //     category: "Frontend",
+  //     dueDate: "",
+  //   });
+  // };
+
   return (
     <div className="min-h-screen bg-amber-50 flex items-center justify-center px-4">
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
@@ -51,7 +98,7 @@ const TaskForm: React.FC = () => {
           Team Task Tracker
         </h2>
 
-        <form onSubmit={onSubmitHandler} className="space-y-6">
+        <form onSubmit={formHandler} className="space-y-6">
           <div>
             <label className="block text-blue-700 text-lg mb-1 capitalize">
               Enter the task
@@ -126,6 +173,7 @@ const TaskForm: React.FC = () => {
 
           <button
             type="submit"
+            onClick={validateForm}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md transition duration-200">
             Add Task
           </button>
